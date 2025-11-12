@@ -2,487 +2,204 @@
   <div class="flex flex-wrap mt-4">
     <div class="w-full mb-12 px-4">
       <div
-    class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded"
-    :class="[color === 'light' ? 'bg-white' : 'bg-emerald-900 text-white']"
-  >
-    <div class="rounded-t mb-0 px-4 py-3 border-0">
-      <div class="flex flex-wrap items-center">
-        <div class="relative w-full px-4 max-w-full flex-grow flex-1">
-          <h3
-            class="font-semibold text-lg"
-            :class="[color === 'light' ? 'text-blueGray-700' : 'text-white']"
-          >
-          All Products
-          </h3>
+        class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded"
+        :class="[color === 'light' ? 'bg-white' : 'bg-emerald-900 text-white']"
+      >
+        <div class="rounded-t mb-0 px-4 py-3 border-0">
+          <div class="flex flex-wrap items-center">
+            <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+              <h3
+                class="font-semibold text-lg"
+                :class="[color === 'light' ? 'text-blueGray-700' : 'text-white']"
+              >
+                All Products
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="block w-full overflow-x-auto">
+          <!-- Products table -->
+          <table class="items-center w-full bg-transparent border-collapse">
+            <thead>
+              <tr>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                  :class="[
+                    color === 'light'
+                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                  ]"
+                >
+                  Product Name
+                </th>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                  :class="[
+                    color === 'light'
+                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                  ]"
+                >
+                  Price
+                </th>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                  :class="[
+                    color === 'light'
+                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                  ]"
+                >
+                  Image
+                </th>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                  :class="[
+                    color === 'light'
+                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                  ]"
+                >
+                  Description
+                </th>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                  :class="[
+                    color === 'light'
+                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                  ]"
+                >
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Loading state -->
+              <tr v-if="product.length === 0">
+                <td colspan="5" class="text-center py-4">
+                  <span :class="[color === 'light' ? 'text-blueGray-500' : 'text-white']">
+                    Loading products...
+                  </span>
+                </td>
+              </tr>
+              
+              <!-- Dynamic product rows -->
+              <tr v-for="p in product" :key="p.id">
+                <th
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center"
+                >
+                  <img
+                    :src="p.imageUrl || 'https://via.placeholder.com/48'"
+                    class="h-12 w-12 bg-white rounded-full border object-cover"
+                    :alt="p.name"
+                    @error="handleImageError"
+                  />
+                  <span
+                    class="ml-3 font-bold"
+                    :class="[
+                      color === 'light' ? 'text-blueGray-600' : 'text-white',
+                    ]"
+                  >
+                    {{ p.name }}
+                  </span>
+                </th>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  ${{ p.price ? p.price.toFixed(2) : '0.00' }} USD
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  <a 
+                    v-if="p.imageUrl" 
+                    :href="p.imageUrl" 
+                    target="_blank"
+                    class="text-blue-500 hover:text-blue-700 underline"
+                  >
+                    View Image
+                  </a>
+                  <span v-else :class="[color === 'light' ? 'text-blueGray-400' : 'text-gray-300']">
+                    No image
+                  </span>
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  <div class="max-w-xs truncate" :title="p.description">
+                    {{ p.description || 'No description available' }}
+                  </div>
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  <button
+                    @click="deleteProduct(p.id)"
+                    class="bg-red-500 text-white active:bg-red-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-    <div class="block w-full overflow-x-auto">
-      <!-- Projects table -->
-      <table class="items-center w-full bg-transparent border-collapse">
-        <thead>
-          <tr>
-            <th
-              class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-              :class="[
-                color === 'light'
-                  ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                  : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-              ]"
-            >
-              Product Name
-            </th>
-            <th
-              class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-              :class="[
-                color === 'light'
-                  ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                  : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-              ]"
-            >
-              Price
-            </th>
-            <th
-              class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-              :class="[
-                color === 'light'
-                  ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                  : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-              ]"
-            >
-              Image URL
-            </th>
-            <!-- <th
-              class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-              :class="[
-                color === 'light'
-                  ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                  : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-              ]"
-            >
-              Users
-            </th> -->
-            <th
-              class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-              :class="[
-                color === 'light'
-                  ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                  : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-              ]"
-            >
-              Description
-            </th>
-            <th
-              class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-              :class="[
-                color === 'light'
-                  ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                  : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-              ]"
-            ></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center"
-            >
-              <img
-                :src="bootstrap"
-                class="h-12 w-12 bg-white rounded-full border"
-                alt="..."
-              />
-              <span
-                class="ml-3 font-bold"
-                :class="[
-                  color === 'light' ? 'text-blueGray-600' : 'text-white',
-                ]"
-              >
-                Argon Design System
-              </span>
-            </th>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              $2,500 USD
-            </td>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <i class="fas fa-circle text-orange-500 mr-2"></i> pending
-            </td>
-            <!-- <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <div class="flex">
-                <img
-                  :src="team1"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow"
-                />
-                <img
-                  :src="team2"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-                <img
-                  :src="team3"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-                <img
-                  :src="team4"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-              </div>
-            </td> -->
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <div class="flex items-center">
-                <span class="mr-2">60%</span>
-                <div class="relative w-full">
-                  <div
-                    class="overflow-hidden h-2 text-xs flex rounded bg-red-200"
-                  >
-                    <div
-                      style="width: 60%;"
-                      class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-500"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right"
-            >
-              <table-dropdown />
-            </td>
-          </tr>
-          <tr>
-            <th
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center"
-            >
-              <img
-                :src="angular"
-                class="h-12 w-12 bg-white rounded-full border"
-                alt="..."
-              />
-              <span
-                class="ml-3 font-bold"
-                :class="[
-                  color === 'light' ? 'text-blueGray-600' : 'text-white',
-                ]"
-              >
-                Angular Now UI Kit PRO
-              </span>
-            </th>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              $1,800 USD
-            </td>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <i class="fas fa-circle text-emerald-500 mr-2"></i>
-              completed
-            </td>
-            <!-- <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <div class="flex">
-                <img
-                  :src="team1"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow"
-                />
-                <img
-                  :src="team2"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-                <img
-                  :src="team3"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-                <img
-                  :src="team4"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-              </div>
-            </td> -->
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <div class="flex items-center">
-                <span class="mr-2">100%</span>
-                <div class="relative w-full">
-                  <div
-                    class="overflow-hidden h-2 text-xs flex rounded bg-emerald-200"
-                  >
-                    <div
-                      style="width: 100%;"
-                      class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-500"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right"
-            >
-              <table-dropdown />
-            </td>
-          </tr>
-          <tr>
-            <th
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center"
-            >
-              <img
-                :src="sketch"
-                class="h-12 w-12 bg-white rounded-full border"
-                alt="..."
-              />
-              <span
-                class="ml-3 font-bold"
-                :class="[
-                  color === 'light' ? 'text-blueGray-600' : 'text-white',
-                ]"
-              >
-                Black Dashboard Sketch
-              </span>
-            </th>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              $3,150 USD
-            </td>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <i class="fas fa-circle text-red-500 mr-2"></i> delayed
-            </td>
-            <!-- <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <div class="flex">
-                <img
-                  :src="team1"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow"
-                />
-                <img
-                  :src="team2"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-                <img
-                  :src="team3"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-                <img
-                  :src="team4"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-              </div>
-            </td> -->
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <div class="flex items-center">
-                <span class="mr-2">73%</span>
-                <div class="relative w-full">
-                  <div
-                    class="overflow-hidden h-2 text-xs flex rounded bg-red-200"
-                  >
-                    <div
-                      style="width: 73%;"
-                      class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-500"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right"
-            >
-              <table-dropdown />
-            </td>
-          </tr>
-          <tr>
-            <th
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center"
-            >
-              <img
-                :src="react"
-                class="h-12 w-12 bg-white rounded-full border"
-                alt="..."
-              />
-              <span
-                class="ml-3 font-bold"
-                :class="[
-                  color === 'light' ? 'text-blueGray-600' : 'text-white',
-                ]"
-              >
-                React Material Dashboard
-              </span>
-            </th>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              $4,400 USD
-            </td>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <i class="fas fa-circle text-teal-500 mr-2"></i> on schedule
-            </td>
-            <!-- <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <div class="flex">
-                <img
-                  :src="team1"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow"
-                />
-                <img
-                  :src="team2"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-                <img
-                  :src="team3"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-                <img
-                  :src="team4"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-              </div>
-            </td> -->
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <div class="flex items-center">
-                <span class="mr-2">90%</span>
-                <div class="relative w-full">
-                  <div
-                    class="overflow-hidden h-2 text-xs flex rounded bg-teal-200"
-                  >
-                    <div
-                      style="width: 90%;"
-                      class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-500"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right"
-            >
-              <table-dropdown />
-            </td>
-          </tr>
-          <tr>
-            <th
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center"
-            >
-              <img
-                :src="vue"
-                class="h-12 w-12 bg-white rounded-full border"
-                alt="..."
-              />
-              <span
-                class="ml-3 font-bold"
-                :class="[
-                  color === 'light' ? 'text-blueGray-600' : 'text-white',
-                ]"
-              >
-                React Material Dashboard
-              </span>
-            </th>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              $2,200 USD
-            </td>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <i class="fas fa-circle text-emerald-500 mr-2"></i>
-              completed
-            </td>
-            <!-- <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <div class="flex">
-                <img
-                  :src="team1"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow"
-                />
-                <img
-                  :src="team2"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-                <img
-                  :src="team3"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-                <img
-                  :src="team4"
-                  alt="..."
-                  class="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                />
-              </div>
-            </td> -->
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-            >
-              <div class="flex items-center">
-                <span class="mr-2">100%</span>
-                <div class="relative w-full">
-                  <div
-                    class="overflow-hidden h-2 text-xs flex rounded bg-emerald-200"
-                  >
-                    <div
-                      style="width: 100%;"
-                      class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-500"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td
-              class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right"
-            >
-              <table-dropdown />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-    </div>
-    <div class="w-full mb-12 px-4">
-    </div>
   </div>
 </template>
+
 <script>
+import ProductService from '../../services/ProductService';
 
 export default {
-  components: {
+  props: {
+    color: {
+      default: "light",
+      validator: function (value) {
+        return ["light", "dark"].indexOf(value) !== -1;
+      },
+    },
   },
+
+  data() {
+    return {
+      product: []
+    };
+  },
+
+  async created() {
+    this.loadProducts();
+  },
+
+  methods: {
+    async loadProducts() {
+      try {
+        const res = await ProductService.getAllProducts();
+        this.product = res.data;
+      } catch (error) {
+        console.error("Error loading products:", error);
+        alert("Failed to load products. Please try again.");
+      }
+    },
+
+    async deleteProduct(id) {
+      if (confirm("Are you sure you want to delete this product?")) {
+        try {
+          await ProductService.deleteProduct(id);
+          this.loadProducts();
+        } catch (error) {
+          console.error("Error deleting product:", error);
+          alert("Failed to delete product. Please try again.");
+        }
+      }
+    },
+
+    handleImageError(event) {
+      event.target.src = 'https://via.placeholder.com/48';
+    }
+  }
 };
 </script>
